@@ -392,7 +392,7 @@ export default function TableAdminPage() {
                     </div>
 
                     {/* Blinds Dropdown - Cash games only */}
-                    {gameType === GameType.CASH && (
+                    {gameFormat === GameFormat.CASH && (
                         <div className="mb-3">
                             <label className="text-gray-300 text-xs mb-1 block">
                                 Game Size (Small Blind / Big Blind)
