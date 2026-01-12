@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { GameType, COSMOS_CONSTANTS } from "@block52/poker-vm-sdk";
+import { GameFormat, COSMOS_CONSTANTS } from "@block52/poker-vm-sdk";
 import { getSigningClient, getCosmosClient } from "../utils/cosmos/client";
 import { useNetwork } from "../context/NetworkContext";
 
@@ -19,7 +19,7 @@ export interface SNGOptions {
 
 // Type for creating new table options
 export interface CreateTableOptions {
-    type: GameType;
+    format: GameFormat;
     minBuyIn: number;
     maxBuyIn: number;
     minPlayers: number;
@@ -71,13 +71,13 @@ export const useNewTable = (): UseNewTableReturn => {
             const bigBlindB52USDC = BigInt(Math.floor(gameOptions.bigBlind * Math.pow(10, COSMOS_CONSTANTS.USDC_DECIMALS)));
 
             console.log("🎮 Game Settings:");
-            console.log(`  Game Type: ${gameOptions.type}`);
+            console.log(`  Game Format: ${gameOptions.format}`);
             console.log(`  Buy In: $${gameOptions.minBuyIn} - $${gameOptions.maxBuyIn}`);
             console.log(`  Blinds: $${gameOptions.smallBlind}/$${gameOptions.bigBlind} (input)`);
             console.log(`  Blinds: ${smallBlindB52USDC}/${bigBlindB52USDC} usdc (converted)`);
 
             console.log("📊 Final game parameters:");
-            console.log(`  Game Type: ${gameOptions.type}`);
+            console.log(`  Game Format: ${gameOptions.format}`);
             console.log(`  Players: ${gameOptions.minPlayers}-${gameOptions.maxPlayers}`);
             console.log(`  Min Buy-in: ${minBuyInB52USDC} usdc ($${gameOptions.minBuyIn})`);
             console.log(`  Max Buy-in: ${maxBuyInB52USDC} usdc ($${gameOptions.maxBuyIn})`);
@@ -120,11 +120,11 @@ export const useNewTable = (): UseNewTableReturn => {
             console.log("🚀 Creating New Game on Cosmos Blockchain:");
             console.log(`Creator: ${userAddress}`);
 
-            // Map GameType to string for Cosmos
-            const gameTypeStr = gameOptions.type === GameType.SIT_AND_GO ? "sit_and_go" :
-                gameOptions.type === GameType.TOURNAMENT ? "tournament" : "cash";
+            // Map GameFormat to string for Cosmos
+            const gameTypeStr = gameOptions.format === GameFormat.SIT_AND_GO ? "sit_and_go" :
+                gameOptions.format === GameFormat.TOURNAMENT ? "tournament" : "cash";
 
-            console.log(`Mapped game type: ${gameOptions.type} -> ${gameTypeStr}`);
+            console.log(`Mapped game format: ${gameOptions.format} -> ${gameTypeStr}`);
 
             // Timeout in seconds (5 minutes = 300 seconds)
             const timeoutSeconds = 300;

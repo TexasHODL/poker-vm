@@ -32,8 +32,8 @@ export const useSitAndGoPlayerResults = (): SitAndGoPlayerResultsReturn => {
 
     // Check if it's a sit and go game
     const isSitAndGo = useMemo(() => {
-        return gameState?.type === "sit-and-go";
-    }, [gameState?.type]);
+        return gameState?.gameFormat === "sit-and-go";
+    }, [gameState?.gameFormat]);
 
     // Get all results
     const allResults = useMemo(() => {

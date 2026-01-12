@@ -34,7 +34,7 @@ export const useMinAndMaxBuyIns = (): MinAndMaxBuyInsReturn => {
     console.log("🎰 useMinAndMaxBuyIns - Game Options:");
     console.log("  Full gameState:", gameState);
     console.log("  Full gameOptions:", gameOptions);
-    console.log("  Game type:", gameOptions?.type);
+    console.log("  Game format:", gameOptions?.format);
     console.log("  Raw minBuyIn:", gameOptions?.minBuyIn, typeof gameOptions?.minBuyIn);
     console.log("  Raw maxBuyIn:", gameOptions?.maxBuyIn, typeof gameOptions?.maxBuyIn);
 

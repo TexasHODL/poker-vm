@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { GameType, CosmosClient, getDefaultCosmosConfig } from "@block52/poker-vm-sdk";
+import { GameFormat, CosmosClient, getDefaultCosmosConfig } from "@block52/poker-vm-sdk";
 import { Link, useNavigate } from "react-router-dom";
 import useCosmosWallet from "../hooks/useCosmosWallet";
 import { isValidPlayerAddress } from "../utils/addressUtils";
@@ -29,7 +29,7 @@ const GAME_CREATION_FEE_USDC = GAME_CREATION_FEE_BASE / Math.pow(10, USDC_DECIMA
 
 interface TableData {
     gameId: string;
-    gameType: string;
+    gameFormat: string;
     minPlayers: number;
     maxPlayers: number;
     currentPlayers: number;
@@ -50,7 +50,7 @@ export default function TableAdminPage() {
     const { games: fetchedGames, isLoading, error: gamesError, refetch } = useFindGames();
 
     // Default table settings for Cash Game, 9 players, Texas Hold'em
-    const [gameType, setGameType] = useState<GameType>(GameType.CASH);
+    const [gameFormat, setGameFormat] = useState<GameFormat>(GameFormat.CASH);
     const [minPlayers] = useState(2);
     const [maxPlayers, setMaxPlayers] = useState(9);
     
@@ -64,8 +64,8 @@ export default function TableAdminPage() {
     // Update blind defaults when game type changes
     // Note: Users can manually select any blind level from the dropdown regardless of game type
     // This provides flexibility while maintaining a consistent UX across all game types
-    const handleGameTypeChange = (newType: GameType) => {
-        setGameType(newType);
+    const handleGameFormatChange = (newType: GameFormat) => {
+        setGameFormat(newType);
         // For all game types, keep the current blind level selection
         // Users can adjust it manually using the dropdown
     };
@@ -117,7 +117,7 @@ export default function TableAdminPage() {
         const mappedTables = (fetchedGames || [])
             .map((game: any) => ({
                 gameId: game.address || game.gameId || game.game_id,
-                gameType: game.gameType || game.game_type || "texas-holdem",
+                gameFormat: game.gameFormat || game.game_type || "texas-holdem",
                 minPlayers: game.minPlayers || game.min_players || 2,
                 maxPlayers: game.maxPlayers || game.max_players || 9,
                 currentPlayers: game.currentPlayers || game.current_players || 0,
@@ -154,7 +154,7 @@ export default function TableAdminPage() {
         } : undefined;
 
         // For tournaments, use fixed buy-in; for cash games, use BB-calculated values
-        const isTournament = gameType === GameType.SIT_AND_GO || gameType === GameType.TOURNAMENT;
+        const isTournament = gameFormat === GameFormat.SIT_AND_GO || gameFormat === GameFormat.TOURNAMENT;
         const finalMinBuyIn = isTournament ? parseFloat(tournamentBuyIn) : calculatedMinBuyIn;
         const finalMaxBuyIn = isTournament ? parseFloat(tournamentBuyIn) : calculatedMaxBuyIn;
 
@@ -165,7 +165,7 @@ export default function TableAdminPage() {
         } : undefined;
 
         console.log("📋 Table configuration:", {
-            type: gameType,
+            format: gameFormat,
             minBuyIn: finalMinBuyIn,
             maxBuyIn: finalMaxBuyIn,
             minBuyInBB: isTournament ? "N/A" : minBuyInBB,
@@ -184,7 +184,7 @@ export default function TableAdminPage() {
         try {
             console.log("🚀 Calling createTable...");
             const result = await createTable({
-                type: gameType,
+                format: gameFormat,
                 minBuyIn: finalMinBuyIn,
                 maxBuyIn: finalMaxBuyIn,
                 minPlayers,
@@ -367,13 +367,13 @@ export default function TableAdminPage() {
                         <div>
                             <label className="text-gray-300 text-xs mb-1 block">Game Type</label>
                             <select
-                                value={gameType}
-                                onChange={e => handleGameTypeChange(e.target.value as GameType)}
+                                value={gameFormat}
+                                onChange={e => handleGameFormatChange(e.target.value as GameFormat)}
                                 className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white text-sm"
                             >
-                                <option value={GameType.SIT_AND_GO}>Sit & Go</option>
-                                <option value={GameType.TOURNAMENT}>Tournament</option>
-                                <option value={GameType.CASH}>Cash Game</option>
+                                <option value={GameFormat.SIT_AND_GO}>Sit & Go</option>
+                                <option value={GameFormat.TOURNAMENT}>Tournament</option>
+                                <option value={GameFormat.CASH}>Cash Game</option>
                             </select>
                         </div>
                         <div>
@@ -411,7 +411,7 @@ export default function TableAdminPage() {
 
                     {/* Buy-In Section */}
                     <div className="mb-4">
-                        {gameType === GameType.SIT_AND_GO || gameType === GameType.TOURNAMENT ? (
+                        {gameFormat === GameFormat.SIT_AND_GO || gameFormat === GameFormat.TOURNAMENT ? (
                             <div className="space-y-4">
                                 {/* Buy In */}
                                 <div>
@@ -620,7 +620,7 @@ export default function TableAdminPage() {
                     </div>
 
                     {/* Show Structure Section - Only for SNG/Tournament */}
-                    {(gameType === GameType.SIT_AND_GO || gameType === GameType.TOURNAMENT) && (
+                    {(gameFormat === GameFormat.SIT_AND_GO || gameFormat === GameFormat.TOURNAMENT) && (
                         <div className="mb-4">
                             <div className="flex items-center gap-2 mb-3">
                                 <input
@@ -677,17 +677,17 @@ export default function TableAdminPage() {
                             <input
                                 type="checkbox"
                                 id="enableRake"
-                                checked={enableRake && gameType === GameType.CASH}
+                                checked={enableRake && gameFormat === GameFormat.CASH}
                                 onChange={e => setEnableRake(e.target.checked)}
-                                disabled={gameType !== GameType.CASH}
+                                disabled={gameFormat !== GameFormat.CASH}
                                 className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                             />
-                            <label htmlFor="enableRake" className={`text-sm font-medium ${gameType === GameType.CASH ? "text-gray-300" : "text-gray-500"}`}>
-                                Enable Rake Collection {gameType !== GameType.CASH && "(Cash games only)"}
+                            <label htmlFor="enableRake" className={`text-sm font-medium ${gameFormat === GameFormat.CASH ? "text-gray-300" : "text-gray-500"}`}>
+                                Enable Rake Collection {gameFormat !== GameFormat.CASH && "(Cash games only)"}
                             </label>
                         </div>
 
-                        {enableRake && gameType === GameType.CASH && (
+                        {enableRake && gameFormat === GameFormat.CASH && (
                             <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
                                 <div className="grid grid-cols-2 gap-3 mb-3">
                                     <div>

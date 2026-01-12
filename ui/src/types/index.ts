@@ -4,7 +4,7 @@ import {
     PlayerDTO,
     GameOptionsDTO,
     TexasHoldemRound,
-    GameType,
+    GameFormat,
     ActionDTO,
     PlayerStatus,
     GameOptionsResponse
@@ -181,7 +181,7 @@ export interface TableStateReturn extends BaseHookReturn {
     totalPot: string;
     formattedTotalPot: string;
     tableSize: number;
-    tableType: GameType;
+    tableType: GameFormat;
     roundType: TexasHoldemRound;
 }
 

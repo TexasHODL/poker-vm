@@ -2,7 +2,7 @@ import React from "react";
 import { usePlayerActionDropBox, PlayerActionDisplay } from "../../../hooks/usePlayerActionDropBox";
 import { useSeatJoinNotification, SeatJoinNotification } from "../../../hooks/useSeatJoinNotification";
 import { useGameOptions } from "../../../hooks/useGameOptions";
-import { GameType } from "@block52/poker-vm-sdk";
+import { GameFormat } from "@block52/poker-vm-sdk";
 import { formatForSitAndGo, formatForCashGame, formatUSDCToSimpleDollars } from "../../../utils/numberUtils";
 import "./Badge.css";
 
@@ -102,7 +102,7 @@ type BadgeProps = {
 const Badge: React.FC<BadgeProps> = React.memo(({ count, value, color, canExtend, onExtend, tournamentPlace, tournamentPayout }) => {
     // Get game options to determine if it's a Sit & Go
     const { gameOptions } = useGameOptions();
-    const isSitAndGo = gameOptions?.type === GameType.SIT_AND_GO;
+    const isSitAndGo = gameOptions?.format === GameFormat.SIT_AND_GO;
 
     // Format the value based on game type using clean utility functions
     const formattedValue = isSitAndGo

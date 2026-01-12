@@ -29,6 +29,13 @@ export enum GameType {
     TOURNAMENT = "tournament"
 }
 
+// GameFormat represents the game structure/format (preferred over GameType for new code)
+export enum GameFormat {
+    CASH = "cash",
+    SIT_AND_GO = "sit-and-go",
+    TOURNAMENT = "tournament"
+}
+
 export enum GameStatus {
     WAITING_FOR_PLAYERS = "waiting-for-players",
     REGISTRATION = "registration",
@@ -79,7 +86,7 @@ export type GameOptions = {
     smallBlind: bigint;
     bigBlind: bigint;
     timeout: number;
-    type: GameType; // Optional for cash games
+    format: GameFormat; // Game format (cash/sit-and-go/tournament)
     rake?: RakeConfig; // Optional rake configuration
     owner?: string; // Table owner who collects rake fees
     startingStack?: bigint; // Starting chips for SNG/Tournament (in chips, not dollars)
@@ -95,7 +102,7 @@ export type GameOptionsDTO = {
     smallBlind?: string;
     bigBlind?: string;
     timeout?: number;
-    type?: GameType; // Optional for cash games
+    format?: GameFormat; // Game format (cash/sit-and-go/tournament)
     rake?: RakeConfigDTO; // Optional rake configuration
     owner?: string; // Table owner who collects rake fees
     startingStack?: string; // Starting chips for SNG/Tournament (in chips, not dollars)
@@ -175,7 +182,7 @@ export type TexasHoldemGameState = {
 };
 
 export type TexasHoldemStateDTO = {
-    type: GameType;
+    gameFormat: GameFormat; // Game format (cash/sit-and-go/tournament)
     address: string;
     gameOptions: GameOptionsDTO;
     smallBlindPosition?: number;

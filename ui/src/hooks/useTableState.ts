@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { useGameStateContext } from "../context/GameStateContext";
-import { TexasHoldemRound, GameType } from "@block52/poker-vm-sdk";
+import { TexasHoldemRound, GameFormat } from "@block52/poker-vm-sdk";
 import { TableStateReturn } from "../types/index";
 
 
@@ -25,7 +25,7 @@ export const useTableState = (): TableStateReturn => {
         totalPot: "0",
         formattedTotalPot: "0.00",
         tableSize: DEFAULT_TABLE_SIZE,
-        tableType: GameType.CASH,
+        tableType: GameFormat.CASH,
         roundType: TexasHoldemRound.PREFLOP,
         isLoading,
         error
@@ -57,14 +57,14 @@ export const useTableState = (): TableStateReturn => {
         const tableSize = gameState.gameOptions?.maxPlayers || gameState.gameOptions?.minPlayers || DEFAULT_TABLE_SIZE;
 
         // Extract table type
-        const tableType = gameState.type || GameType.CASH;
+        const tableType = gameState.gameFormat || GameFormat.CASH;
 
         const result: TableStateReturn = {
             currentRound,
             totalPot: totalPotWei,
             formattedTotalPot,
             tableSize,
-            tableType: tableType as GameType,
+            tableType,
             roundType: currentRound,
             isLoading: false,
             error: null

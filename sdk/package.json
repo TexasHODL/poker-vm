@@ -1,6 +1,6 @@
 {
     "name": "@block52/poker-vm-sdk",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "TypeScript SDK for Block52 Poker VM",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",

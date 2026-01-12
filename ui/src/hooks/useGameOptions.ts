@@ -34,16 +34,16 @@ export const useGameOptions = (): GameOptionsReturn => {
             if (!options.maxBuyIn) missingFields.push("maxBuyIn");
             if (!options.maxPlayers) missingFields.push("maxPlayers");
             if (!options.minPlayers) missingFields.push("minPlayers");
-            if (!options.type) missingFields.push("type");
+            if (!options.format) missingFields.push("format");
             
             if (missingFields.length > 0) {
                 console.error("⚠️ Missing game options fields from server:", missingFields);
             }
             
-            // Only return options if we have the critical required fields (smallBlind and bigBlind)
+            // Only return options if we have the critical required fields (smallBlind, bigBlind, and format)
             // timeout is optional - use default of 30 seconds if not provided
-            if (!options.smallBlind || !options.bigBlind) {
-                console.error("⚠️ Cannot display game options: missing critical fields (smallBlind or bigBlind)");
+            if (!options.smallBlind || !options.bigBlind || !options.format) {
+                console.error("⚠️ Cannot display game options: missing critical fields (smallBlind, bigBlind, or format)");
                 return null; // Return null during loading or when data is incomplete
             }
 
@@ -60,7 +60,7 @@ export const useGameOptions = (): GameOptionsReturn => {
                 smallBlind: options.smallBlind,
                 bigBlind: options.bigBlind,
                 timeout: timeout, // Use default timeout if not provided
-                type: options.type!,
+                format: options.format!,
                 otherOptions: options.otherOptions!
             } as Required<GameOptionsDTO>;
         } catch (err) {

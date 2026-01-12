@@ -915,18 +915,10 @@ const Table = React.memo(() => {
                                 >
                                     <span className="text-sm font-semibold" style={{ color: colors.brand.primary }}>
                                         {(() => {
-                                            console.log("🎮 Table Header - Game Type Debug:", {
-                                                rawType: gameState?.type,
-                                                typeOf: typeof gameState?.type,
-                                                isCash: gameState?.type === "cash",
-                                                isSitAndGo: gameState?.type === "sit-and-go",
-                                                isTournament: gameState?.type === "tournament",
-                                                gameOptions: gameState?.gameOptions
-                                            });
-
-                                            if (gameState?.type === "cash") return "Cash • ";
-                                            if (gameState?.type === "tournament") return "Tournament • ";
-                                            if (gameState?.type === "sit-and-go") return "Sit & Go • ";
+                                            const format = gameState?.gameFormat;
+                                            if (format === "cash") return "Cash • ";
+                                            if (format === "tournament") return "Tournament • ";
+                                            if (format === "sit-and-go") return "Sit & Go • ";
                                             return "";
                                         })()}
                                         Texas Hold'em
@@ -1482,7 +1474,7 @@ const Table = React.memo(() => {
             )}
 
             {/* Sit & Go Auto-Join Modal - Shows for Sit & Go games when user is not playing */}
-            {gameState && (gameState.type as string) === "sit-and-go" && !isUserAlreadyPlaying && id && (
+            {gameState && gameState.gameFormat === "sit-and-go" && !isUserAlreadyPlaying && id && (
                 <SitAndGoAutoJoinModal
                     tableId={id}
                     onJoinSuccess={() => {

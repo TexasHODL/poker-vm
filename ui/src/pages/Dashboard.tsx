@@ -22,7 +22,7 @@ import TransactionPanel from "../components/TransactionPanel";
 
 // Game wallet and SDK imports
 // ...existing code...
-import { GameType, generateWallet as generateWalletSDK } from "@block52/poker-vm-sdk";
+import { GameFormat, generateWallet as generateWalletSDK } from "@block52/poker-vm-sdk";
 
 // Hook imports from barrel file
 import { useUserWalletConnect, useNewTable, useCosmosWallet } from "../hooks";
@@ -87,7 +87,7 @@ const Dashboard: React.FC = () => {
     const [createGameError, setCreateGameError] = useState("");
     
     // Modal game options
-    const [modalGameType, setModalGameType] = useState<GameType>(GameType.SIT_AND_GO);
+    const [modalGameFormat, setModalGameFormat] = useState<GameFormat>(GameFormat.SIT_AND_GO);
     const [modalSitAndGoBuyIn, setModalSitAndGoBuyIn] = useState(1); // Single buy-in for Sit & Go
     const [modalPlayerCount, setModalPlayerCount] = useState(4);
     // For Cash Game: min/max players
@@ -312,11 +312,11 @@ const Dashboard: React.FC = () => {
         try {
             // Build game options from modal selections
             // For Sit & Go/Tournament, use the same value for min and max buy-in
-            const isTournament = modalGameType === GameType.SIT_AND_GO || modalGameType === GameType.TOURNAMENT;
+            const isTournament = modalGameFormat === GameFormat.SIT_AND_GO || modalGameFormat === GameFormat.TOURNAMENT;
 
             // Log the modal values before creating game options
             console.log("🎲 Modal Values:");
-            console.log("  Game Type:", modalGameType);
+            console.log("  Game Type:", modalGameFormat);
             console.log("  Min Buy-In (BB):", modalMinBuyInBB);
             console.log("  Max Buy-In (BB):", modalMaxBuyInBB);
             console.log("  Calculated Min Buy-In ($):", calculatedMinBuyIn);
@@ -327,17 +327,17 @@ const Dashboard: React.FC = () => {
             console.log("  Cosmos Address:", cosmosWallet.address);
 
             const gameOptions: CreateTableOptions = {
-                type: modalGameType,
+                format: modalGameFormat,
                 minBuyIn: isTournament ? modalSitAndGoBuyIn : calculatedMinBuyIn,
                 maxBuyIn: isTournament ? modalSitAndGoBuyIn : calculatedMaxBuyIn,
-                minPlayers: modalGameType === GameType.CASH ? modalMinPlayers : modalPlayerCount,
-                maxPlayers: modalGameType === GameType.CASH ? modalMaxPlayers : modalPlayerCount,
+                minPlayers: modalGameFormat === GameFormat.CASH ? modalMinPlayers : modalPlayerCount,
+                maxPlayers: modalGameFormat === GameFormat.CASH ? modalMaxPlayers : modalPlayerCount,
                 smallBlind: modalSmallBlind,
                 bigBlind: modalBigBlind
             };
 
             console.log("📦 Final CreateTableOptions being sent to Cosmos:");
-            console.log("  type:", gameOptions.type);
+            console.log("  format:", gameOptions.format);
             console.log("  minBuyIn:", gameOptions.minBuyIn);
             console.log("  maxBuyIn:", gameOptions.maxBuyIn);
             console.log("  minPlayers:", gameOptions.minPlayers);
@@ -1100,17 +1100,17 @@ const Dashboard: React.FC = () => {
                                     <div>
                                         <label className="block text-white text-sm mb-1">Game Type</label>
                                         <select
-                                            value={modalGameType}
-                                            onChange={e => setModalGameType(e.target.value as GameType)}
+                                            value={modalGameFormat}
+                                            onChange={e => setModalGameFormat(e.target.value as GameFormat)}
                                             className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
                                         >
-                                            <option value={GameType.SIT_AND_GO}>Sit & Go</option>
-                                            <option value={GameType.CASH}>Cash Game</option>
-                                            <option value={GameType.TOURNAMENT}>Tournament</option>
+                                            <option value={GameFormat.SIT_AND_GO}>Sit & Go</option>
+                                            <option value={GameFormat.CASH}>Cash Game</option>
+                                            <option value={GameFormat.TOURNAMENT}>Tournament</option>
                                         </select>
                                     </div>
 
-                                    {modalGameType === GameType.CASH ? (
+                                    {modalGameFormat === GameFormat.CASH ? (
                                         <div className="flex gap-4">
                                             <div className="flex-1">
                                                 <label className="block text-white text-sm mb-1">Min Players</label>
@@ -1166,7 +1166,7 @@ const Dashboard: React.FC = () => {
                                     </div>
 
                                     {/* Show different fields based on game type */}
-                                    {modalGameType === GameType.SIT_AND_GO || modalGameType === GameType.TOURNAMENT ? (
+                                    {modalGameFormat === GameFormat.SIT_AND_GO || modalGameFormat === GameFormat.TOURNAMENT ? (
                                         // For Sit & Go and Tournament: Single buy-in field
                                         <div>
                                             <label className="block text-white text-sm mb-1">Tournament Buy-In ($)</label>
