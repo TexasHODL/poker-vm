@@ -391,23 +391,25 @@ export default function TableAdminPage() {
                         </div>
                     </div>
 
-                    {/* Blinds Dropdown */}
-                    <div className="mb-3">
-                        <label className="text-gray-300 text-xs mb-1 block">
-                            Game Size (Small Blind / Big Blind)
-                        </label>
-                        <select
-                            value={selectedBlindLevel}
-                            onChange={e => setSelectedBlindLevel(Number(e.target.value))}
-                            className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white text-sm"
-                        >
-                            {BLIND_LEVELS.map((level, index) => (
-                                <option key={index} value={index}>
-                                    {level.label}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                    {/* Blinds Dropdown - Cash games only */}
+                    {gameType === GameType.CASH && (
+                        <div className="mb-3">
+                            <label className="text-gray-300 text-xs mb-1 block">
+                                Game Size (Small Blind / Big Blind)
+                            </label>
+                            <select
+                                value={selectedBlindLevel}
+                                onChange={e => setSelectedBlindLevel(Number(e.target.value))}
+                                className="w-full px-3 py-2 bg-gray-900 border border-gray-600 rounded-lg text-white text-sm"
+                            >
+                                {BLIND_LEVELS.map((level, index) => (
+                                    <option key={index} value={index}>
+                                        {level.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
 
                     {/* Buy-In Section */}
                     <div className="mb-4">

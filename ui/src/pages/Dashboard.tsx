@@ -1149,22 +1149,6 @@ const Dashboard: React.FC = () => {
                                         </div>
                                     )}
 
-                                    {/* Blind Level Dropdown */}
-                                    <div>
-                                        <label className="block text-white text-sm mb-1">Game Size (Small Blind / Big Blind)</label>
-                                        <select
-                                            value={selectedBlindLevel}
-                                            onChange={e => setSelectedBlindLevel(Number(e.target.value))}
-                                            className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
-                                        >
-                                            {BLIND_LEVELS.map((level, index) => (
-                                                <option key={index} value={index}>
-                                                    {level.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
                                     {/* Show different fields based on game type */}
                                     {modalGameFormat === GameFormat.SIT_AND_GO || modalGameFormat === GameFormat.TOURNAMENT ? (
                                         // For Sit & Go and Tournament: Single buy-in field
@@ -1181,8 +1165,24 @@ const Dashboard: React.FC = () => {
                                             <p className="text-xs text-gray-400 mt-1">All players pay the same buy in</p>
                                         </div>
                                     ) : (
-                                        // For Cash games: Buy-in in Big Blinds (BB)
+                                        // For Cash games: Blind level and buy-in in Big Blinds (BB)
                                         <>
+                                            {/* Blind Level Dropdown - Cash games only */}
+                                            <div>
+                                                <label className="block text-white text-sm mb-1">Game Size (Small Blind / Big Blind)</label>
+                                                <select
+                                                    value={selectedBlindLevel}
+                                                    onChange={e => setSelectedBlindLevel(Number(e.target.value))}
+                                                    className="w-full p-2 rounded bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all duration-200"
+                                                >
+                                                    {BLIND_LEVELS.map((level, index) => (
+                                                        <option key={index} value={index}>
+                                                            {level.label}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
                                             {/* Preset buttons */}
                                             <div>
                                                 <label className="block text-white text-sm mb-2">Buy-In Presets</label>
